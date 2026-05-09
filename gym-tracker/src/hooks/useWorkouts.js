@@ -12,23 +12,15 @@ function load() {
   }
 }
 
-function save(workouts) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(workouts));
-}
-
 export function useWorkouts() {
   const [workouts, setWorkouts] = useState(load);
 
   useEffect(() => {
-    save(workouts);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(workouts));
   }, [workouts]);
 
   const addWorkout = useCallback((entry) => {
-    const workout = {
-      id: crypto.randomUUID(),
-      createdAt: new Date().toISOString(),
-      ...entry,
-    };
+    const workout = { id: crypto.randomUUID(), createdAt: new Date().toISOString(), ...entry };
     setWorkouts(prev => [workout, ...prev]);
     return workout;
   }, []);
@@ -37,14 +29,28 @@ export function useWorkouts() {
     setWorkouts(prev => prev.filter(w => w.id !== id));
   }, []);
 
+  const getExerciseWorkouts = useCallback((exerciseId) => {
+    return workouts
+      .filter(w => w.exerciseId === exerciseId)
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  }, [workouts]);
+
+  const getLastWorkout = useCallback((exerciseId) => {
+    return workouts.find(w => w.exerciseId === exerciseId) || null;
+  }, [workouts]);
+
+  const getPersonalRecord = useCallback((exerciseId) => {
+    const matches = workouts.filter(w => w.exerciseId === exerciseId);
+    if (!matches.length) return null;
+    return Math.max(...matches.map(w => w.weight));
+  }, [workouts]);
+
   const getDaysSince = useCallback((exerciseId) => {
     const match = workouts.find(w => w.exerciseId === exerciseId);
     if (!match) return null;
-    const diff = Date.now() - new Date(match.createdAt).getTime();
-    return Math.floor(diff / (1000 * 60 * 60 * 24));
+    return Math.floor((Date.now() - new Date(match.createdAt).getTime()) / (1000 * 60 * 60 * 24));
   }, [workouts]);
 
-  // exercises not done in >= thresholdDays OR never done
   const getStaleSuggestions = useCallback((thresholdDays = 14) => {
     return EXERCISES.filter(ex => {
       const days = getDaysSince(ex.id);
@@ -56,6 +62,9 @@ export function useWorkouts() {
     workouts,
     addWorkout,
     deleteWorkout,
+    getExerciseWorkouts,
+    getLastWorkout,
+    getPersonalRecord,
     getDaysSince,
     getStaleSuggestions,
   };

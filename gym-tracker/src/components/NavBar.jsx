@@ -1,8 +1,8 @@
 export function NavBar({ active, onChange, suggestionCount }) {
   const tabs = [
-    { id: 'add', icon: '⚡', label: 'Log It' },
-    { id: 'history', icon: '📁', label: 'Archives' },
-    { id: 'suggestions', icon: '🔮', label: 'Oracle', badge: suggestionCount },
+    { id: 'add', label: 'LOG IT' },
+    { id: 'vault', label: 'THE VAULT' },
+    { id: 'oracle', label: 'ORACLE', badge: suggestionCount },
   ];
 
   return (
@@ -15,23 +15,31 @@ export function NavBar({ active, onChange, suggestionCount }) {
           <button
             key={tab.id}
             onClick={() => onChange(tab.id)}
-            className="flex-1 flex flex-col items-center py-3 gap-1 transition-colors relative"
+            className="flex-1 flex flex-col items-center py-3 gap-0.5 relative"
             style={{
               color: active === tab.id ? 'var(--acid)' : 'var(--smoke)',
               background: 'transparent',
               border: 'none',
               cursor: 'pointer',
               borderTop: active === tab.id ? '2px solid var(--acid)' : '2px solid transparent',
+              transition: 'color 0.15s',
             }}
           >
-            <span className="text-xl leading-none">{tab.icon}</span>
-            <span className="text-xs" style={{ fontFamily: 'Oswald, sans-serif', letterSpacing: '0.05em' }}>
+            <span
+              className="text-xs uppercase"
+              style={{ fontFamily: 'Oswald, sans-serif', letterSpacing: '0.08em' }}
+            >
               {tab.label}
             </span>
             {tab.badge > 0 && (
               <span
-                className="absolute top-2 right-4 text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center"
-                style={{ background: 'var(--blood)', color: 'var(--bone)', fontSize: '0.6rem' }}
+                className="absolute top-1.5 right-3 rounded-full w-4 h-4 flex items-center justify-center"
+                style={{
+                  background: 'var(--blood)',
+                  color: 'var(--bone)',
+                  fontSize: '0.55rem',
+                  fontFamily: 'Space Mono, monospace',
+                }}
               >
                 {tab.badge > 9 ? '9+' : tab.badge}
               </span>
