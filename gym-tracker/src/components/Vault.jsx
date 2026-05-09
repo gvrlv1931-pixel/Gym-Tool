@@ -1,6 +1,15 @@
 import { useState, useMemo } from 'react';
 import { HOW_IT_FELT } from '../data/exercises.js';
 
+const DELETE_PROMPTS = [
+  "This set will be stricken from the record.",
+  "Pretend it never happened?",
+  "Erase this from your legacy forever?",
+  "The iron gods will not remember this.",
+  "Gone. Like your motivation on Mondays.",
+  "This one goes in the void.",
+];
+
 function formatDate(iso) {
   const d = new Date(iso);
   const days = Math.floor((Date.now() - d.getTime()) / (1000 * 60 * 60 * 24));
@@ -162,6 +171,7 @@ function ExerciseCard({ group }) {
 
 function LogCard({ workout, onDelete }) {
   const [confirming, setConfirming] = useState(false);
+  const [deletePrompt] = useState(() => DELETE_PROMPTS[Math.floor(Math.random() * DELETE_PROMPTS.length)]);
   const felt = HOW_IT_FELT.find(h => h.value === workout.howItFelt);
   const sets = setsDisplay(workout);
 
@@ -211,9 +221,23 @@ function LogCard({ workout, onDelete }) {
       <div className="flex items-center justify-between">
         <span className="text-xs text-[var(--smoke)]">{formatDate(workout.createdAt)}</span>
         {confirming ? (
-          <div className="flex gap-2">
-            <button className="btn-punk btn-blood text-xs py-0.5 px-2" onClick={() => onDelete(workout.id)}>delete</button>
-            <button className="text-xs text-[var(--smoke)]" onClick={() => setConfirming(false)}>cancel</button>
+          <div className="flex flex-col items-end gap-1.5">
+            <span className="text-xs text-[var(--smoke)] italic text-right">{deletePrompt}</span>
+            <div className="flex gap-2">
+              <button
+                className="btn-punk btn-blood text-xs py-0.5 px-2"
+                style={{ fontFamily: 'Oswald, sans-serif', letterSpacing: '0.06em' }}
+                onClick={() => onDelete(workout.id)}
+              >
+                BURY IT
+              </button>
+              <button
+                className="text-xs text-[var(--smoke)] hover:text-[var(--bone)] transition-colors"
+                onClick={() => setConfirming(false)}
+              >
+                spare it
+              </button>
+            </div>
           </div>
         ) : (
           <button
