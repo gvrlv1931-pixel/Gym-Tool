@@ -33,7 +33,7 @@ function Sparkline({ weights }) {
   );
 }
 
-function setsInfo(workout) {
+function setsDisplay(workout) {
   if (!workout.sets) return null;
   if (Array.isArray(workout.sets)) {
     const valid = workout.sets.filter(s => s.reps);
@@ -56,10 +56,12 @@ function ExerciseCard({ group }) {
   const trend = recentWeights.length >= 2
     ? recentWeights[recentWeights.length - 1] - recentWeights[0]
     : 0;
-  const lastSets = setsInfo(last);
+
+  const lastSets = setsDisplay(last);
 
   return (
     <div className="card-punk p-4 flex flex-col gap-3">
+      {/* Header row */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           <div
@@ -73,6 +75,7 @@ function ExerciseCard({ group }) {
             {group.muscleGroups?.map(m => <span key={m} className="tag text-[var(--acid)]">{m}</span>)}
           </div>
         </div>
+        {/* Last weight — the number that matters */}
         <div className="text-right shrink-0">
           <div
             className="font-bold text-[var(--bone)]"
@@ -88,48 +91,59 @@ function ExerciseCard({ group }) {
         </div>
       </div>
 
+      {/* Stats row */}
       <div className="flex items-end justify-between gap-2">
         <div className="flex flex-col gap-0.5">
           <span className="text-xs text-[var(--smoke)]">
-            Best: <span className="text-[var(--bone)]">{pr}{last.unit}</span>
+            All-time best: <span className="text-[var(--bone)]">{pr}{last.unit}</span>
           </span>
           <span className="text-xs text-[var(--smoke)]">
             {group.workouts.length} session{group.workouts.length !== 1 ? 's' : ''}
             {trend > 0 && <span className="text-[var(--acid)] ml-1">+{trend}{last.unit} trend</span>}
+            {trend < 0 && <span className="text-[var(--smoke)] ml-1">{trend}{last.unit} trend</span>}
           </span>
         </div>
         <Sparkline weights={recentWeights} />
       </div>
 
+      {/* Last session sets detail */}
       {lastSets && (
         <div className="flex flex-wrap gap-1">
           {lastSets.map(s => (
-            <span key={s.num} className="tag" style={{ color: s.nearFailure ? 'var(--blood)' : 'var(--smoke)' }}>
+            <span
+              key={s.num}
+              className="tag"
+              style={{ color: s.nearFailure ? 'var(--blood)' : 'var(--smoke)' }}
+            >
               {s.num}: {s.reps}r{s.nearFailure ? ' !' : ''}
             </span>
           ))}
         </div>
       )}
 
+      {/* History toggle */}
       {group.workouts.length > 1 && (
         <button
           className="text-xs text-left text-[var(--smoke)] underline"
-          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
           onClick={() => setExpanded(v => !v)}
         >
-          {expanded ? 'hide history' : `all ${group.workouts.length} sessions`}
+          {expanded ? 'hide history' : `show all ${group.workouts.length} sessions`}
         </button>
       )}
 
       {expanded && (
-        <div className="flex flex-col gap-1 border-t border-[#222] pt-2">
+        <div className="flex flex-col gap-1 border-t border-[#222] pt-2 mt-1">
           {sorted.slice(1).map(w => {
-            const ws = setsInfo(w);
+            const wSets = setsDisplay(w);
             return (
               <div key={w.id} className="flex items-center justify-between text-xs">
                 <span className="text-[var(--smoke)]">{formatDate(w.createdAt)}</span>
                 <div className="flex items-center gap-2">
-                  {ws && <span className="text-[var(--smoke)]">{ws.map(s => s.reps).join('/')}r</span>}
+                  {wSets && (
+                    <span className="text-[var(--smoke)]">
+                      {wSets.map(s => s.reps).join('/')}r
+                    </span>
+                  )}
                   <span
                     className="font-bold"
                     style={{ fontFamily: 'Oswald, sans-serif', color: w.weight >= pr ? 'var(--acid)' : 'var(--bone)' }}
@@ -149,19 +163,25 @@ function ExerciseCard({ group }) {
 function LogCard({ workout, onDelete }) {
   const [confirming, setConfirming] = useState(false);
   const felt = HOW_IT_FELT.find(h => h.value === workout.howItFelt);
-  const sets = setsInfo(workout);
+  const sets = setsDisplay(workout);
 
   return (
     <div className="card-punk p-3 flex flex-col gap-2">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <div className="font-bold text-[var(--acid)] text-sm truncate" style={{ fontFamily: 'Oswald, sans-serif' }}>
+          <div
+            className="font-bold text-[var(--acid)] text-sm truncate"
+            style={{ fontFamily: 'Oswald, sans-serif' }}
+          >
             {workout.exerciseCodeName || workout.exerciseName}
           </div>
           <div className="text-xs text-[var(--smoke)]">{workout.exerciseName}</div>
         </div>
         <div className="text-right shrink-0">
-          <div className="font-bold text-[var(--bone)]" style={{ fontFamily: 'Oswald, sans-serif', fontSize: '1.1rem' }}>
+          <div
+            className="font-bold text-[var(--bone)]"
+            style={{ fontFamily: 'Oswald, sans-serif', fontSize: '1.1rem' }}
+          >
             {workout.weight}{workout.unit}
           </div>
         </div>
@@ -183,7 +203,9 @@ function LogCard({ workout, onDelete }) {
       </div>
 
       {workout.notes && (
-        <p className="text-xs text-[var(--smoke)] italic border-l border-[#333] pl-2">"{workout.notes}"</p>
+        <p className="text-xs text-[var(--smoke)] italic border-l border-[#333] pl-2">
+          "{workout.notes}"
+        </p>
       )}
 
       <div className="flex items-center justify-between">
@@ -191,12 +213,11 @@ function LogCard({ workout, onDelete }) {
         {confirming ? (
           <div className="flex gap-2">
             <button className="btn-punk btn-blood text-xs py-0.5 px-2" onClick={() => onDelete(workout.id)}>delete</button>
-            <button className="text-xs text-[var(--smoke)]" style={{ background: 'none', border: 'none', cursor: 'pointer' }} onClick={() => setConfirming(false)}>cancel</button>
+            <button className="text-xs text-[var(--smoke)]" onClick={() => setConfirming(false)}>cancel</button>
           </div>
         ) : (
           <button
             className="text-xs text-[#444] hover:text-[var(--blood)] transition-colors"
-            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
             onClick={() => setConfirming(true)}
           >
             remove
@@ -239,16 +260,27 @@ export function Vault({ workouts, onDelete }) {
   if (workouts.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 gap-4 text-center">
-        <div className="text-2xl font-bold text-[var(--smoke)]" style={{ fontFamily: 'Oswald, sans-serif' }}>THE VAULT IS EMPTY</div>
-        <p className="text-sm text-[var(--smoke)] max-w-xs">Your legacy has not yet been forged. Log your first set.</p>
+        <div
+          className="text-2xl font-bold text-[var(--smoke)]"
+          style={{ fontFamily: 'Oswald, sans-serif' }}
+        >
+          THE VAULT IS EMPTY
+        </div>
+        <p className="text-sm text-[var(--smoke)] max-w-xs">
+          Your legacy has not yet been forged.<br />Log your first set.
+        </p>
       </div>
     );
   }
 
   return (
     <div className="flex flex-col gap-4">
+      {/* View toggle */}
       <div className="flex" style={{ border: '1px solid #333' }}>
-        {[{ id: 'records', label: 'RECORDS' }, { id: 'log', label: 'SESSION LOG' }].map(v => (
+        {[
+          { id: 'records', label: 'RECORDS' },
+          { id: 'log', label: 'SESSION LOG' },
+        ].map(v => (
           <button
             key={v.id}
             className="flex-1 py-2 text-xs uppercase tracking-widest transition-all"
@@ -268,7 +300,10 @@ export function Vault({ workouts, onDelete }) {
 
       {view === 'records' && (
         <div className="flex flex-col gap-3">
-          <p className="text-xs text-[var(--smoke)]">{byExercise.length} exercises tracked</p>
+          <p className="text-xs text-[var(--smoke)]">
+            {byExercise.length} exercise{byExercise.length !== 1 ? 's' : ''} tracked —
+            big number is last session weight
+          </p>
           {byExercise.map(g => <ExerciseCard key={g.exerciseId} group={g} />)}
         </div>
       )}

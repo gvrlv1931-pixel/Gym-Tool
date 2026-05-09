@@ -29,6 +29,12 @@ export function useWorkouts() {
     setWorkouts(prev => prev.filter(w => w.id !== id));
   }, []);
 
+  const getExerciseWorkouts = useCallback((exerciseId) => {
+    return workouts
+      .filter(w => w.exerciseId === exerciseId)
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  }, [workouts]);
+
   const getLastWorkout = useCallback((exerciseId) => {
     return workouts.find(w => w.exerciseId === exerciseId) || null;
   }, [workouts]);
@@ -56,6 +62,7 @@ export function useWorkouts() {
     workouts,
     addWorkout,
     deleteWorkout,
+    getExerciseWorkouts,
     getLastWorkout,
     getPersonalRecord,
     getDaysSince,

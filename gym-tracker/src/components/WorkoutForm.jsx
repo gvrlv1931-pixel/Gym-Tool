@@ -22,7 +22,7 @@ const PR_LINES = [
 ];
 
 const NEAR_FAILURE_LINES = [
-  "You pushed to the limit. That's where gains live.",
+  'You pushed to the limit. That\'s where gains live.',
   'Near failure = near greatness. You masochist.',
   'Dug deep on that one. Adaptation incoming.',
 ];
@@ -79,7 +79,6 @@ function SetRow({ set, index, total, onChange, onRemove }) {
           color: set.nearFailure ? 'var(--blood)' : 'var(--smoke)',
           background: set.nearFailure ? 'rgba(255,45,85,0.08)' : 'transparent',
           fontFamily: 'Space Mono, monospace',
-          cursor: 'pointer',
         }}
       >
         {set.nearFailure ? 'HIT THE LIMIT' : 'near limit?'}
@@ -89,7 +88,6 @@ function SetRow({ set, index, total, onChange, onRemove }) {
           type="button"
           onClick={() => onRemove(index)}
           className="text-[var(--smoke)] hover:text-[var(--blood)] transition-colors text-lg leading-none shrink-0"
-          style={{ background: 'none', border: 'none', cursor: 'pointer' }}
         >
           ×
         </button>
@@ -213,6 +211,7 @@ export function WorkoutForm({ onAdd, getLastWorkout, getPersonalRecord }) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 pb-4">
 
+      {/* Exercise picker */}
       <div>
         <label className="block text-xs text-[var(--smoke)] uppercase tracking-widest mb-1">
           The Move
@@ -244,6 +243,7 @@ export function WorkoutForm({ onAdd, getLastWorkout, getPersonalRecord }) {
         </div>
       )}
 
+      {/* Last session callout — the most important thing */}
       {lastStr && (
         <div
           className="px-3 py-2 flex items-center justify-between"
@@ -256,10 +256,12 @@ export function WorkoutForm({ onAdd, getLastWorkout, getPersonalRecord }) {
         </div>
       )}
 
+      {/* Tagline */}
       {selectedExercise?.tagline && (
         <p className="text-xs text-[var(--smoke)] italic px-1">"{selectedExercise.tagline}"</p>
       )}
 
+      {/* Muscle tags */}
       {selectedExercise && (
         <div className="flex flex-wrap gap-1">
           {selectedExercise.muscleGroups.map(m => (
@@ -268,6 +270,7 @@ export function WorkoutForm({ onAdd, getLastWorkout, getPersonalRecord }) {
         </div>
       )}
 
+      {/* Equipment */}
       <div>
         <label className="block text-xs text-[var(--smoke)] uppercase tracking-widest mb-1">
           Equipment
@@ -278,6 +281,7 @@ export function WorkoutForm({ onAdd, getLastWorkout, getPersonalRecord }) {
         </select>
       </div>
 
+      {/* Weight — wider input, narrow unit */}
       <div>
         <label className="block text-xs text-[var(--smoke)] uppercase tracking-widest mb-1">
           Weight
@@ -303,13 +307,14 @@ export function WorkoutForm({ onAdd, getLastWorkout, getPersonalRecord }) {
         </div>
       </div>
 
+      {/* Sets */}
       <div>
         <div className="flex items-center justify-between mb-2">
           <label className="text-xs text-[var(--smoke)] uppercase tracking-widest">Sets</label>
           <button
             type="button" onClick={addSet}
             className="text-xs border border-[var(--acid)] text-[var(--acid)] px-2 py-0.5 hover:bg-[var(--acid)] hover:text-[var(--void)] transition-all"
-            style={{ fontFamily: 'Oswald, sans-serif', background: 'transparent', cursor: 'pointer' }}
+            style={{ fontFamily: 'Oswald, sans-serif' }}
           >
             + ADD SET
           </button>
@@ -323,10 +328,11 @@ export function WorkoutForm({ onAdd, getLastWorkout, getPersonalRecord }) {
           ))}
         </div>
         <p className="text-xs text-[var(--smoke)] mt-1 px-1">
-          Toggle near limit on sets where you were close to failure.
+          Toggle "near limit?" on sets where you got close to failure.
         </p>
       </div>
 
+      {/* Vibes */}
       <div>
         <label className="block text-xs text-[var(--smoke)] uppercase tracking-widest mb-2">
           Vibes Check <span className="normal-case">(optional)</span>
@@ -344,7 +350,6 @@ export function WorkoutForm({ onAdd, getLastWorkout, getPersonalRecord }) {
                 minWidth: '4.5rem',
                 fontFamily: 'Space Mono, monospace',
                 fontSize: '0.65rem',
-                cursor: 'pointer',
               }}
             >
               <span className="text-xl">{h.emoji}</span>
@@ -354,6 +359,7 @@ export function WorkoutForm({ onAdd, getLastWorkout, getPersonalRecord }) {
         </div>
       </div>
 
+      {/* Notes */}
       <div>
         <label className="block text-xs text-[var(--smoke)] uppercase tracking-widest mb-1">
           Notes <span className="normal-case">(optional)</span>
