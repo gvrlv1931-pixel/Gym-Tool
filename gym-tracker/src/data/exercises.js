@@ -161,7 +161,7 @@ export const EXERCISES = [
     emoji: '👽',
     muscleGroups: ['shoulders', 'back'],
     defaultEquipment: 'cable',
-    tagline: 'Pull toward face. Do not actually pull off face.',
+    tagline: "Pull toward face. Do not actually pull off face.",
   },
   {
     id: 'arnold_press',
@@ -170,7 +170,7 @@ export const EXERCISES = [
     emoji: '🤖',
     muscleGroups: ['shoulders', 'triceps'],
     defaultEquipment: 'dumbbell',
-    tagline: 'I\'ll be back... with bigger delts.',
+    tagline: "I'll be back... with bigger delts.",
   },
   // BICEPS
   {
@@ -185,7 +185,7 @@ export const EXERCISES = [
   {
     id: 'hammer_curl',
     realName: 'Hammer Curl',
-    codeName: 'Thor\'s Practice',
+    codeName: "Thor's Practice",
     emoji: '🔨',
     muscleGroups: ['biceps'],
     defaultEquipment: 'dumbbell',
@@ -217,7 +217,7 @@ export const EXERCISES = [
     emoji: '⬇️',
     muscleGroups: ['triceps', 'chest', 'shoulders'],
     defaultEquipment: 'bodyweight',
-    tagline: 'Go down. Come back. That\'s it.',
+    tagline: "Go down. Come back. That's it.",
   },
   {
     id: 'skull_crusher',
@@ -226,7 +226,7 @@ export const EXERCISES = [
     emoji: '💀',
     muscleGroups: ['triceps'],
     defaultEquipment: 'barbell',
-    tagline: 'Don\'t. Just don\'t let go.',
+    tagline: "Don't. Just don't let go.",
   },
   {
     id: 'tricep_pushdown',
@@ -365,7 +365,7 @@ export const EXERCISES = [
     emoji: '👟',
     muscleGroups: ['calves'],
     defaultEquipment: 'machine',
-    tagline: 'Either you have calves or you don\'t. Good luck.',
+    tagline: "Either you have calves or you don't. Good luck.",
   },
   // FULL BODY / CARDIO
   {
@@ -375,7 +375,7 @@ export const EXERCISES = [
     emoji: '😤',
     muscleGroups: ['full body'],
     defaultEquipment: 'bodyweight',
-    tagline: 'Satan\'s favourite exercise.',
+    tagline: "Satan's favourite exercise.",
   },
   {
     id: 'kettlebell_swing',
@@ -393,7 +393,7 @@ export const EXERCISES = [
     emoji: '🚀',
     muscleGroups: ['full body', 'shoulders', 'back'],
     defaultEquipment: 'barbell',
-    tagline: 'You either full send or you don\'t.',
+    tagline: "You either full send or you don't.",
   },
 ];
 
@@ -410,12 +410,3 @@ export const getExerciseById = (id) => EXERCISES.find(e => e.id === id);
 
 export const getExercisesByMuscle = (muscle) =>
   EXERCISES.filter(e => e.muscleGroups.includes(muscle));
-
-export const getSuggestionMessages = () => [
-  "Your {muscle} muscles are collecting dust. Rude.",
-  "Haven't hit {exercise} in {days} days. Your {muscle} is sending strongly-worded letters.",
-  "{exercise} hasn't seen your face in {days} days. It misses you. Or not. It's a barbell.",
-  "It's been {days} days since {exercise}. Are you OK? Your {muscle} is worried.",
-  "Skipping {exercise} for {days} days is a choice. A questionable one.",
-  "{days} days, no {exercise}. Your {muscle} has filed a missing persons report.",
-];

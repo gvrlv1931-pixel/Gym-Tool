@@ -45,7 +45,7 @@ export function WorkoutForm({ onAdd }) {
       return;
     }
     if (!form.weight) {
-      setError('How much weight? Even 2.5kg counts. We don\'t judge.');
+      setError("How much weight? Even 2.5kg counts. We don't judge.");
       triggerShake();
       return;
     }

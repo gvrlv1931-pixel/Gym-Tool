@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react';
-import { EXERCISES, getExercisesByMuscle } from '../data/exercises.js';
+import { EXERCISES } from '../data/exercises.js';
 
 const SHAME_MESSAGES = [
   (ex, days) => `Your ${ex.muscleGroups[0]} is sending a strongly-worded letter. Last seen ${ex.codeName}: ${days === null ? 'never' : `${days}d ago`}.`,
   (ex, days) => `${ex.codeName} misses you. It's been ${days === null ? 'forever' : `${days} days`}. It weeps.`,
-  (ex, days) => `${days === null ? 'You\'ve never done' : `It\'s been ${days} days since`} ${ex.codeName}. Your ${ex.muscleGroups[0]} filed a missing persons report.`,
-  (ex, days) => `The ${ex.codeName} station has ${days === null ? 'never been visited' : `gone ${days} days untouched`}. It\'s becoming a museum piece.`,
+  (ex, days) => `${days === null ? "You've never done" : `It's been ${days} days since`} ${ex.codeName}. Your ${ex.muscleGroups[0]} filed a missing persons report.`,
+  (ex, days) => `The ${ex.codeName} station has ${days === null ? 'never been visited' : `gone ${days} days untouched`}. It's becoming a museum piece.`,
   (ex, days) => `${days === null ? 'No record of' : `${days} days since`} ${ex.codeName}. Honestly? Kind of embarrassing.`,
 ];
 

@@ -44,7 +44,6 @@ export function useWorkouts() {
     return Math.floor(diff / (1000 * 60 * 60 * 24));
   }, [workouts]);
 
-  // exercises not done in >= thresholdDays OR never done
   const getStaleSuggestions = useCallback((thresholdDays = 14) => {
     return EXERCISES.filter(ex => {
       const days = getDaysSince(ex.id);

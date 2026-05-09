@@ -11,7 +11,7 @@ const SLOGANS = [
   "The bar doesn't care about your feelings.",
   'Pain is just weakness screaming on its way out.',
   'Pick things up. Put things down. Repeat.',
-  'Your only competition is yesterday\'s you.',
+  "Your only competition is yesterday's you.",
   "The gym doesn't have off days.",
   'Sweat now. Flex later.',
 ];
@@ -27,7 +27,7 @@ const TAB_TITLES = {
 const TAB_SUBTITLES = {
   add: slogan,
   history: 'Every session. Every PR. Every questionable decision.',
-  suggestions: 'What the data says you\'re neglecting.',
+  suggestions: "What the data says you're neglecting.",
 };
 
 export default function App() {
