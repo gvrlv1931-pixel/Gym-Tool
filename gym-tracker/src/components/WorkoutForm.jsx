@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { EXERCISES, EQUIPMENT_TYPES, HOW_IT_FELT } from '../data/exercises.js';
 
-const EMPTY_SET = () => ({ reps: '', nearFailure: false });
+const EMPTY_SET = () => ({ reps: '', nearFailure: false, animKey: 0 });
 
 const DEFAULT_FORM = {
   exerciseId: '',
@@ -22,7 +22,7 @@ const PR_LINES = [
 ];
 
 const NEAR_FAILURE_LINES = [
-  'You pushed to the limit. That\'s where gains live.',
+  "You pushed to the limit. That's where gains live.",
   'Near failure = near greatness. You masochist.',
   'Dug deep on that one. Adaptation incoming.',
 ];
@@ -55,33 +55,37 @@ function SetRow({ set, index, total, onChange, onRemove }) {
   return (
     <div className="flex items-center gap-2">
       <span
-        className="text-xs text-[var(--smoke)] shrink-0"
-        style={{ fontFamily: 'Oswald, sans-serif', width: '3.5rem' }}
+        className="text-xs text-[var(--smoke)] shrink-0 text-center"
+        style={{ fontFamily: 'Oswald, sans-serif', width: '2.5rem' }}
       >
-        SET {index + 1}
+        S{index + 1}
       </span>
       <input
         type="number"
         inputMode="numeric"
         min="1"
-        className="input-punk text-center"
-        style={{ width: '4.5rem' }}
+        className="input-punk text-center shrink-0"
+        style={{ width: '5.5rem' }}
         placeholder="reps"
         value={set.reps}
         onChange={e => onChange(index, 'reps', e.target.value)}
       />
       <button
+        key={set.animKey}
         type="button"
         onClick={() => onChange(index, 'nearFailure', !set.nearFailure)}
-        className="flex-1 text-xs py-1 px-2 border transition-all text-left"
+        className={`flex-1 py-2 px-2 border transition-colors text-center ${set.nearFailure ? 'near-fail-burst' : ''}`}
         style={{
+          fontFamily: 'Oswald, sans-serif',
+          fontSize: '0.75rem',
+          letterSpacing: '0.06em',
           borderColor: set.nearFailure ? 'var(--blood)' : '#333',
-          color: set.nearFailure ? 'var(--blood)' : 'var(--smoke)',
-          background: set.nearFailure ? 'rgba(255,45,85,0.08)' : 'transparent',
-          fontFamily: 'Space Mono, monospace',
+          color: set.nearFailure ? 'var(--bone)' : 'var(--smoke)',
+          background: set.nearFailure ? 'var(--blood)' : 'transparent',
+          cursor: 'pointer',
         }}
       >
-        {set.nearFailure ? 'HIT THE LIMIT' : 'near limit?'}
+        {set.nearFailure ? 'LIMIT SMASHED' : 'to failure?'}
       </button>
       {total > 1 && (
         <button
@@ -166,7 +170,12 @@ export function WorkoutForm({ onAdd, getLastWorkout, getPersonalRecord }) {
   }));
 
   const updateSet = (i, field, value) => setForm(prev => ({
-    ...prev, sets: prev.sets.map((s, idx) => idx === i ? { ...s, [field]: value } : s),
+    ...prev, sets: prev.sets.map((s, idx) => {
+      if (idx !== i) return s;
+      const updated = { ...s, [field]: value };
+      if (field === 'nearFailure' && value === true) updated.animKey = s.animKey + 1;
+      return updated;
+    }),
   }));
 
   const handleSubmit = (e) => {
@@ -243,7 +252,7 @@ export function WorkoutForm({ onAdd, getLastWorkout, getPersonalRecord }) {
         </div>
       )}
 
-      {/* Last session callout — the most important thing */}
+      {/* Last session callout */}
       {lastStr && (
         <div
           className="px-3 py-2 flex items-center justify-between"
@@ -281,7 +290,7 @@ export function WorkoutForm({ onAdd, getLastWorkout, getPersonalRecord }) {
         </select>
       </div>
 
-      {/* Weight — wider input, narrow unit */}
+      {/* Weight */}
       <div>
         <label className="block text-xs text-[var(--smoke)] uppercase tracking-widest mb-1">
           Weight
@@ -295,15 +304,14 @@ export function WorkoutForm({ onAdd, getLastWorkout, getPersonalRecord }) {
             value={form.weight}
             onChange={e => setField('weight', e.target.value)}
           />
-          <select
-            className="input-punk"
-            style={{ width: '4.5rem', flexShrink: 0 }}
-            value={form.unit}
-            onChange={e => setField('unit', e.target.value)}
+          <button
+            type="button"
+            className="input-punk text-center shrink-0"
+            style={{ width: '5rem', flexShrink: 0, cursor: 'pointer', fontFamily: 'Oswald, sans-serif', letterSpacing: '0.08em' }}
+            onClick={() => setField('unit', form.unit === 'kg' ? 'lbs' : 'kg')}
           >
-            <option value="kg">kg</option>
-            <option value="lbs">lbs</option>
-          </select>
+            {form.unit}
+          </button>
         </div>
       </div>
 
@@ -328,7 +336,7 @@ export function WorkoutForm({ onAdd, getLastWorkout, getPersonalRecord }) {
           ))}
         </div>
         <p className="text-xs text-[var(--smoke)] mt-1 px-1">
-          Toggle "near limit?" on sets where you got close to failure.
+          Tap "to failure?" if you dug deep — barely a rep left in the tank.
         </p>
       </div>
 
